@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# Script to manage automated BorgBackup with simple scheduling.
-# Prompts for passphrase, calculates next run time, performs backup,
-# and logs hourly status updates.
-
-# Be sure to run as a user with full permission to the files being backed up.
-
 # Get the path of the currently running script
 SCRIPT_PATH="$(realpath "$0")"
 

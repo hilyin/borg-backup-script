@@ -1,4 +1,5 @@
-Script to manage automated BorgBackup with simple scheduling.
-Prompts for passphrase, calculates next run time, performs backup, and logs hourly status updates.
+This script manages automated BorgBackup with simple scheduling, ensuring the key is not stored persistently on the system. It requires manual activation.
 
-Run within screen or tmux to avoid accidently closing session. Use a user with full permissions to the files.
+The script will prompt for a passphrase, calculate the next run time, perform the backup, and log hourly status updates.
+
+To avoid accidentally closing the session, run the script within screen or tmux. Use a user account that has full permissions to the files.
