@@ -69,9 +69,10 @@ backup_script() {
         echo "Backup completed successfully. Archive name: $ARCHIVE_NAME"
     fi
 
-    # Calculate next scheduled backup time
-    next_run_epoch=$(($initial_delay + $(date +%s) + BACKUP_INTERVAL_MINUTES * 60))
+    # Calculate next scheduled backup time correctly
+    next_run_epoch=$(($(date +%s) + BACKUP_INTERVAL_MINUTES * 60))
     echo "Next backup scheduled at $(date -d @$next_run_epoch)."
+
 
     # Log every hour until the next run to show the script is waiting
     for ((i = 0; i < $BACKUP_INTERVAL_MINUTES / 60; i++)); do
