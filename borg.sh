@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Get the path of the currently running script
-SCRIPT_PATH="$(realpath "$0")"
-
 # Define log path
 LOG_PATH="/home/user/borg.log"
 
