@@ -49,7 +49,7 @@ backup_script() {
   # Prompt the user for the passphrase
   read -sp 'Enter BorgBackup passphrase: ' BORG_PASSPHRASE
   export BORG_PASSPHRASE
-  echo "Passphrase set and exported. Starting backup process."
+  echo -e "\nPassphrase set and exported.\nStarting backup process."
 
   while true; do
     # Calculate the initial delay until the start time
@@ -69,7 +69,6 @@ backup_script() {
     # Calculate next scheduled backup time correctly
     next_run_epoch=$(($(date +%s) + BACKUP_INTERVAL_MINUTES * 60))
     echo "Next backup scheduled at $(date -d @$next_run_epoch)."
-
 
     # Log every hour until the next run to show the script is waiting
     for ((i = 0; i < $BACKUP_INTERVAL_MINUTES / 60; i++)); do
