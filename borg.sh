@@ -20,19 +20,17 @@ BACKUP_INTERVAL_MINUTES=1440
 # Function to calculate the initial and subsequent run times
 calculate_next_run_time() {
   local start_time="$1"
-  local interval_minutes="$2"
   local current_epoch=$(date +%s)
   local target_time_today=$(date -d "today $start_time" +%s)
   local target_time_tomorrow=$(date -d "tomorrow $start_time" +%s)
 
   if [ $current_epoch -ge $target_time_today ]; then
     # If current time is past today's target time, scheduling for tomorrow.
-    local delay_seconds=$((target_time_tomorrow - current_epoch))
+    echo $target_time_tomorrow
   else
     # Scheduling for later today.
-    local delay_seconds=$((target_time_today - current_epoch))
+    echo $target_time_today
   fi
-  echo $delay_seconds
 }
 
 # Converts seconds to HH:MM:SS format
@@ -53,7 +51,9 @@ backup_script() {
 
   while true; do
     # Calculate the initial delay until the start time
-    initial_delay=$(calculate_next_run_time "$START_TIME" "$BACKUP_INTERVAL_MINUTES")
+    next_run_epoch=$(calculate_next_run_time "$START_TIME")
+    current_epoch=$(date +%s)
+    initial_delay=$((next_run_epoch - current_epoch))
     formatted_delay=$(convert_seconds_to_hms $initial_delay)
     echo "Sleeping for $formatted_delay until the start time."
     sleep $initial_delay
@@ -66,15 +66,21 @@ backup_script() {
         echo "Backup completed successfully. Archive name: $ARCHIVE_NAME"
     fi
 
-    # Calculate next scheduled backup time correctly
-    next_run_epoch=$(($(date +%s) + BACKUP_INTERVAL_MINUTES * 60))
-    echo "Next backup scheduled at $(date -d @$next_run_epoch)."
+    # Calculate the next start time
+    next_run_epoch=$(calculate_next_run_time "$START_TIME")
+    current_epoch=$(date +%s)
+    next_delay=$((next_run_epoch - current_epoch))
 
-    # Log every hour until the next run to show the script is waiting
-    for ((i = 0; i < $BACKUP_INTERVAL_MINUTES / 60; i++)); do
+    # Log hourly until the next run to show the script is waiting
+    while [ $next_delay -gt 3600 ]; do
       echo "Backup script waiting. Next run at $(date -d @$next_run_epoch)."
       sleep 3600
+      current_epoch=$(date +%s)
+      next_delay=$((next_run_epoch - current_epoch))
     done
+
+    # Sleep the remaining time until the next run
+    sleep $next_delay
   done
 
   # Clear the passphrase on script exit
