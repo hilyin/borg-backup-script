@@ -1,21 +1,24 @@
 #!/bin/bash
 
-# Define log path
+# Path to the log file
 LOG_PATH="/home/user/borg.log"
-# Define the repository path
+# Path to the Borg repository
 REPO_PATH="/mnt/repo-drive"
-# Define the directory to back up
+# Path to the directory to be backed up
 BACKUP_PATH="/mnt/backup-drive"
-# Define the base name for the archive
+# Archive name with date and time
 ARCHIVE_NAME="example-$(date +%Y-%m-%d_%H-%M-%S)"
-# Desired start time (24-hour format, e.g., "02:00" for 2 AM)
+# Desired start time in 24-hour format
 START_TIME="02:00"
-# Backup interval in minutes (e.g., 1440 for daily backups)
+# Backup interval in minutes (1440 for daily backups)
 BACKUP_INTERVAL_MINUTES=1440
-# Log interval to display script waiting
+# Interval for logging script status
 LOG_INTERVAL_MINUTES=60
 
-# Do not edit
+#########################
+### DO NOT EDIT BELOW ###
+#########################
+
 LOG_INTERVAL_SECONDS=$((LOG_INTERVAL_MINUTES * 60))
 
 # Function to calculate the initial and subsequent run times
