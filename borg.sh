@@ -2,20 +2,20 @@
 
 # Define log path
 LOG_PATH="/home/user/borg.log"
-
 # Define the repository path
 REPO_PATH="/mnt/repo-drive"
-
 # Define the directory to back up
 BACKUP_PATH="/mnt/backup-drive"
-
 # Define the base name for the archive
 ARCHIVE_NAME="example-$(date +%Y-%m-%d_%H-%M-%S)"
-
 # Desired start time (24-hour format, e.g., "02:00" for 2 AM)
 START_TIME="02:00"
 # Backup interval in minutes (e.g., 1440 for daily backups)
 BACKUP_INTERVAL_MINUTES=1440
+# Log interval to display script waiting
+LOG_INTERVAL_MINUTES=60
+# Do not edit
+LOG_INTERVAL_SECONDS=$((LOG_INTERVAL_MINUTES * 60))
 
 # Function to calculate the initial and subsequent run times
 calculate_next_run_time() {
@@ -72,9 +72,9 @@ backup_script() {
     next_delay=$((next_run_epoch - current_epoch))
 
     # Log hourly until the next run to show the script is waiting
-    while [ $next_delay -gt 3600 ]; do
+    while [ $next_delay -gt $LOG_INTERVAL_SECONDS ]; do
       echo "Backup script waiting. Next run at $(date -d @$next_run_epoch)."
-      sleep 3600
+      sleep $LOG_INTERVAL_SECONDS
       current_epoch=$(date +%s)
       next_delay=$((next_run_epoch - current_epoch))
     done
